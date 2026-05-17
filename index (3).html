@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Фармакологія Модуль 2 — 226 препаратів</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0b12;--s1:#13131e;--s2:#1c1c2e;--s3:#252538;
+  --b1:#2e2e48;--b2:#3d3d5c;--b3:#5a5a80;
+  --acc:#7c6af7;--acc2:#5b4de0;--ag:rgba(124,106,247,.15);
+  --gr:#3ecf8e;--grb:rgba(62,207,142,.12);
+  --rd:#f87171;--rdb:rgba(248,113,113,.12);
+  --am:#fbbf24;--amb:rgba(251,191,36,.12);
+  --cy:#38bdf8;--cyb:rgba(56,189,248,.1);
+  --tx:#e8e8f2;--tx2:#9090b8;--tx3:#55557a;
+  --mono:'JetBrains Mono',monospace;--sans:'Manrope',sans-serif;
+  --r:10px;--r2:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--s1)}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+
+/* LAYOUT */
+.app{display:grid;grid-template-columns:280px 1fr;height:100vh;overflow:hidden}
+.sidebar{background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden}
+.main{display:flex;flex-direction:column;overflow:hidden}
+
+/* SIDEBAR TOP */
+.sb-head{padding:16px;border-bottom:1px solid var(--b1)}
+.sb-logo{font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px}
+.sb-title{font-size:15px;font-weight:800;line-height:1.2}
+.sb-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:10px 16px;border-bottom:1px solid var(--b1)}
+.sstat{text-align:center;background:var(--s2);border-radius:var(--r);padding:7px 4px}
+.sstat .n{font-family:var(--mono);font-size:16px;font-weight:700}
+.sstat .l{font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-top:1px}
+.sstat.g .n{color:var(--gr)}
+.sstat.w .n{color:var(--am)}
+.sstat.a .n{color:var(--acc)}
+.prog{height:2px;background:var(--b1);margin:0 16px;border-radius:1px}
+.prog-f{height:2px;background:linear-gradient(90deg,var(--acc),var(--gr));border-radius:1px;transition:width .4s}
+
+/* SEARCH + FILTER */
+.sb-search{padding:10px 12px;border-bottom:1px solid var(--b1)}
+.search-in{width:100%;background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:7px 11px;color:var(--tx);font-family:var(--sans);font-size:12px;outline:none}
+.search-in:focus{border-color:var(--acc)}
+.search-in::placeholder{color:var(--tx3)}
+.sb-filters{display:flex;gap:5px;padding:8px 12px;border-bottom:1px solid var(--b1);overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
+.sb-filters::-webkit-scrollbar{display:none}
+.fb{background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:3px 9px;font-size:10px;color:var(--tx2);cursor:pointer;white-space:nowrap;font-family:var(--sans);transition:all .15s}
+.fb:hover,.fb.on{background:var(--ag);border-color:var(--acc);color:var(--acc)}
+.fb.all.on{background:rgba(62,207,142,.1);border-color:var(--gr);color:var(--gr)}
+
+/* DRUG LIST */
+.drug-list{flex:1;overflow-y:auto;padding:6px}
+.di{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;cursor:pointer;border:1px solid transparent;margin-bottom:1px;transition:all .12s}
+.di:hover{background:var(--s2);border-color:var(--b1)}
+.di.sel{background:var(--ag);border-color:var(--acc)}
+.di-dot{width:6px;height:6px;border-radius:50%;background:var(--b2);flex-shrink:0;transition:background .2s}
+.di.ok .di-dot{background:var(--gr)}
+.di.wk .di-dot{background:var(--am)}
+.di-txt{flex:1;min-width:0}
+.di-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.di-sub{font-size:10px;color:var(--tx3);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--b1);background:var(--s1);flex-shrink:0;padding:0 8px}
+.nb{padding:11px 14px;font-size:12px;font-weight:700;color:var(--tx3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.nb:hover{color:var(--tx2)}
+.nb.on{color:var(--acc);border-bottom-color:var(--acc)}
+.tb-actions{margin-left:auto;display:flex;gap:8px;padding:6px 0}
+.act-btn{background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:5px 12px;font-size:11px;font-weight:700;color:var(--tx2);cursor:pointer;font-family:var(--sans);transition:all .15s}
+.act-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--ag)}
+.act-btn.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+.act-btn.primary:hover{background:var(--acc2)}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:24px 28px}
+
+/* DRUG HEADER */
+.dh{margin-bottom:20px}
+.dh-name{font-size:24px;font-weight:800;margin-bottom:4px}
+.dh-badges{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.badge{font-size:10px;padding:3px 10px;border-radius:20px;font-weight:600;letter-spacing:.04em;font-family:var(--mono)}
+.b-grp{background:var(--ag);color:var(--acc);border:1px solid rgba(124,106,247,.3)}
+.b-g{background:var(--grb);color:var(--gr);border:1px solid rgba(62,207,142,.25)}
+
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:16px 18px;margin-bottom:12px}
+.card-label{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:8px;font-family:var(--mono)}
+.card-val{font-size:13px;color:var(--tx);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px}
+
+/* BADGES IN CARDS */
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.tag{font-size:11px;padding:2px 9px;border-radius:16px;font-weight:500}
+.tag-ind{background:var(--grb);color:var(--gr);border:1px solid rgba(62,207,142,.2)}
+.tag-side{background:var(--rdb);color:var(--rd);border:1px solid rgba(248,113,113,.2)}
+.tag-contra{background:var(--amb);color:var(--am);border:1px solid rgba(251,191,36,.2)}
+.tag-combo{background:var(--cyb);color:var(--cy);border:1px solid rgba(56,189,248,.2)}
+
+/* CHAIN */
+.chain{margin-bottom:14px}
+.chain-label{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;font-family:var(--mono)}
+.chain-steps{display:flex;flex-direction:column;gap:0}
+.cs{display:flex;gap:10px;align-items:flex-start}
+.cs-line{display:flex;flex-direction:column;align-items:center}
+.cs-num{width:22px;height:22px;border-radius:50%;background:var(--ag);border:1px solid var(--acc);color:var(--acc);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)}
+.cs-conn{width:1px;flex:1;min-height:10px;background:var(--b1);margin:2px 0}
+.cs-text{font-size:12px;color:var(--tx);padding:3px 0 12px;line-height:1.5}
+
+/* TIP */
+.tip{background:linear-gradient(135deg,rgba(124,106,247,.07),rgba(62,207,142,.04));border:1px solid var(--b2);border-left:3px solid var(--acc);border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:16px;font-size:12px;line-height:1.6}
+.tip-lbl{font-size:9px;font-weight:800;letter-spacing:.1em;color:var(--acc);margin-bottom:5px;font-family:var(--mono);text-transform:uppercase}
+
+/* QUIZ */
+.quiz-wrap{padding:4px 0}
+.quiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.qprog{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+.qprog strong{color:var(--tx)}
+.qscore{font-family:var(--mono);font-size:11px;background:var(--s2);border:1px solid var(--b1);border-radius:16px;padding:3px 10px}
+.qtype{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-bottom:10px;display:inline-block;font-family:var(--mono)}
+.qt-mcq{background:var(--ag);color:#a99fff}
+.qt-case{background:var(--grb);color:var(--gr)}
+.qt-match{background:var(--cyb);color:var(--cy)}
+.case-box{background:var(--s2);border:1px solid var(--b1);border-left:3px solid var(--gr);border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:12px;font-size:13px;font-style:italic;line-height:1.6}
+.qtext{font-size:15px;font-weight:600;line-height:1.5;margin-bottom:16px}
+.opts{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:10px;border:1px solid var(--b1);background:var(--s1);cursor:pointer;text-align:left;width:100%;font-family:var(--sans);transition:all .13s}
+.opt:hover:not(.dis){border-color:var(--acc);background:var(--ag)}
+.opt.correct{border-color:var(--gr)!important;background:var(--grb)!important}
+.opt.wrong{border-color:var(--rd)!important;background:var(--rdb)!important}
+.opt.reveal{border-color:var(--gr)!important;background:var(--grb)!important}
+.opt.dis{cursor:default;pointer-events:none}
+.opt-k{width:24px;height:24px;border-radius:6px;background:var(--s2);border:1px solid var(--b2);color:var(--tx2);font-family:var(--mono);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.opt.correct .opt-k{background:var(--grb);border-color:var(--gr);color:var(--gr)}
+.opt.wrong .opt-k{background:var(--rdb);border-color:var(--rd);color:var(--rd)}
+.opt.reveal .opt-k{background:var(--grb);border-color:var(--gr);color:var(--gr)}
+.opt-t{font-size:13px;color:var(--tx);line-height:1.4;padding-top:3px}
+
+/* MATCH */
+.match-area{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.match-col-h{font-size:9px;font-weight:800;letter-spacing:.1em;color:var(--tx3);text-transform:uppercase;font-family:var(--mono);margin-bottom:7px}
+.match-items{display:flex;flex-direction:column;gap:5px}
+.mi{padding:9px 12px;border-radius:8px;border:1px solid var(--b1);background:var(--s1);font-size:12px;cursor:pointer;transition:all .13s;color:var(--tx);line-height:1.4}
+.mi:hover{border-color:var(--acc);background:var(--ag)}
+.mi.sel{border-color:var(--acc);background:var(--ag);color:var(--acc)}
+.mi.ok{border-color:var(--gr)!important;background:var(--grb)!important;color:var(--gr)!important;cursor:default;pointer-events:none}
+.mi.bad{border-color:var(--rd)!important;background:var(--rdb)!important;color:var(--rd)!important;cursor:default}
+.mi.dis{cursor:default;pointer-events:none}
+
+/* EXPLAIN */
+.expl{background:var(--s2);border:1px solid var(--b1);border-left:3px solid var(--acc);border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:14px;font-size:12px;line-height:1.6}
+.expl strong{color:var(--acc)}
+
+/* QUIZ NAV */
+.qnav{display:flex;align-items:center;gap:10px}
+
+/* COMPLETE */
+.complete{text-align:center;padding:48px 20px}
+.comp-icon{font-size:52px;margin-bottom:14px}
+.comp-title{font-size:22px;font-weight:800;margin-bottom:6px}
+.comp-sub{font-size:13px;color:var(--tx2);margin-bottom:20px}
+.score-big{font-family:var(--mono);font-size:52px;font-weight:700;color:var(--acc);margin-bottom:4px;line-height:1}
+.score-lbl{font-size:11px;color:var(--tx3);margin-bottom:24px}
+
+/* BTNS */
+.btn{padding:9px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans);border:none;letter-spacing:.02em;transition:all .15s}
+.btn-pr{background:var(--acc);color:#fff}
+.btn-pr:hover{background:var(--acc2)}
+.btn-gh{background:transparent;border:1px solid var(--b2);color:var(--tx2)}
+.btn-gh:hover{border-color:var(--acc);color:var(--acc);background:var(--ag)}
+.btn-gr{background:var(--grb);border:1px solid rgba(62,207,142,.3);color:var(--gr)}
+.btn-gr:hover{background:rgba(62,207,142,.2)}
+.btn-am{background:var(--amb);border:1px solid rgba(251,191,36,.3);color:var(--am)}
+.btn-am:hover{background:rgba(251,191,36,.2)}
+.brow{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+
+/* HOME */
+.home{padding:24px 28px}
+.home-h{font-size:26px;font-weight:800;margin-bottom:6px}
+.home-sub{font-size:13px;color:var(--tx2);margin-bottom:20px}
+.qrow{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.gc{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.gcard{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.gcard:hover{border-color:var(--acc);transform:translateY(-1px)}
+.gcard-n{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--acc);margin-bottom:3px}
+.gcard-name{font-size:13px;font-weight:700;margin-bottom:3px}
+.gcard-sub{font-size:10px;color:var(--tx3)}
+.gcard-bar{height:2px;background:var(--b1);border-radius:1px;margin-top:10px}
+.gcard-fill{height:2px;background:var(--acc);border-radius:1px}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:12px;color:var(--tx3)}
+.empty-i{font-size:42px;opacity:.25}
+.empty-t{font-size:15px;font-weight:700;color:var(--tx2)}
+
+/* RESPONSIVE */
+@media(max-width:860px){
+.app{grid-template-columns:1fr}
+.sidebar{position:fixed;left:-290px;z-index:200;height:100vh;transition:left .3s;width:280px}
+.sidebar.open{left:0}
+}
+
+/* ANIM */
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fi{animation:fi .18s ease}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sb">
+    <div class="sb-head">
+      <div class="sb-logo">Фармакологія · Модуль 2</div>
+      <div class="sb-title">226 препаратів</div>
+    </div>
+    <div style="padding:8px 12px 4px;border-bottom:1px solid var(--b1)">
+      <div class="prog"><div class="prog-f" id="pf" style="width:0%"></div></div>
+    </div>
+    <div class="sb-stats">
+      <div class="sstat"><div class="n" id="stot">226</div><div class="l">всього</div></div>
+      <div class="sstat g"><div class="n" id="slrn">0</div><div class="l">вивчено</div></div>
+      <div class="sstat w"><div class="n" id="swk">0</div><div class="l">слабкі</div></div>
+    </div>
+    <div class="sb-search">
+      <input class="search-in" id="srch" placeholder="Пошук препарату..." autocomplete="off">
+    </div>
+    <div class="sb-filters" id="filters"></div>
+    <div class="drug-list" id="dlist"></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="nb on" id="nb-home" onclick="showHome()">Головна</div>
+      <div class="nb" id="nb-learn" onclick="showLearn()">Розбір</div>
+      <div class="nb" id="nb-quiz" onclick="startQuiz(false)">Тест</div>
+      <div class="nb" id="nb-weak" onclick="startWeakQuiz()">Слабкі</div>
+      <div class="tb-actions">
+        <div class="act-btn" onclick="pickRandom()">Випадковий</div>
+        <div class="act-btn primary" onclick="startQuiz(false)" id="quiz-start-btn">Почати тест</div>
+      </div>
+    </div>
+    <div id="mc" style="flex:1;overflow-y:auto"></div>
+  </main>
+</div>
+
+<script src="drugs.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
